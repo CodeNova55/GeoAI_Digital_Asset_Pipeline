@@ -1,0 +1,294 @@
+# GeoAI Digital Asset Pipeline Configuration
+# ==========================================
+# This file contains all configurable parameters for the pipeline
+
+# Project Settings
+project:
+  name: "GeoAI Digital Asset Pipeline"
+  version: "1.0.0"
+  author: "GeoAI Research Team"
+  description: "QGIS + AI integration for geospatial analysis"
+  crs_default: "EPSG:4326"
+  output_crs: "EPSG:3857"
+
+# Data Paths
+paths:
+  data_dir: "./data"
+  raw_data: "./data/raw"
+  processed_data: "./data/processed"
+  models_dir: "./models"
+  outputs_dir: "./outputs"
+  logs_dir: "./logs"
+  cache_dir: "./.cache"
+
+# QGIS Settings
+qgis:
+  version: "3.28"
+  plugin_path: "./scripts"
+  style_library: "./styles"
+  max_features: 100000
+  batch_size: 100
+  memory_limit_mb: 4096
+
+# Coordinate Reference Systems
+crs:
+  supported:
+    - "EPSG:4326"  # WGS84
+    - "EPSG:3857"  # Web Mercator
+    - "EPSG:32633" # UTM Zone 33N
+    - "EPSG:25832" # ETRS89 / UTM Zone 32N
+  transformation_method: "helmert"
+  accuracy_threshold: 0.01  # meters
+
+# Raster Processing
+raster:
+  default_resolution: 10  # meters
+  resampling_method: "bilinear"
+  nodata_value: -9999
+  compression: "LZW"
+  tile_size: 256
+  overviews: true
+  overview_levels: [2, 4, 8, 16, 32]
+
+# Vector Processing
+vector:
+  simplify_tolerance: 0.0001
+  snap_tolerance: 0.00001
+  min_area: 100  # square meters
+  min_length: 10  # meters
+  topology_check: true
+  geometry_validation: true
+
+# Machine Learning Settings
+ml:
+  # General ML Settings
+  random_seed: 42
+  test_size: 0.2
+  validation_size: 0.1
+  
+  # Classification Settings
+  classification:
+    algorithm: "random_forest"  # random_forest, xgboost, svm, neural_network
+    n_estimators: 100
+    max_depth: 20
+    min_samples_split: 5
+    min_samples_leaf: 2
+    class_weights: "balanced"
+    
+  # Object Detection Settings
+  object_detection:
+    model: "faster_rcnn"  # faster_rcnn, yolo, ssd
+    backbone: "resnet50"
+    confidence_threshold: 0.7
+    nms_threshold: 0.4
+    input_size: [512, 512]
+    batch_size: 8
+    learning_rate: 0.001
+    epochs: 50
+    
+  # Semantic Segmentation Settings
+  segmentation:
+    model: "unet"  # unet, deeplabv3, fcn
+    backbone: "resnet34"
+    input_size: [512, 512]
+    classes:
+      - "background"
+      - "buildings"
+      - "roads"
+      - "vegetation"
+      - "water"
+      - "bare_soil"
+    loss_function: "cross_entropy"
+    metrics: ["iou", "dice", "accuracy"]
+    
+  # Change Detection Settings
+  change_detection:
+    method: "siamese_network"  # siamese, difference, classification
+    threshold: 0.5
+    min_change_area: 50  # square meters
+    
+  # Clustering Settings
+  clustering:
+    algorithm: "dbscan"  # dbscan, kmeans, hdbscan
+    eps: 0.5
+    min_samples: 5
+    n_clusters: null  # for kmeans
+
+# Deep Learning Model Configurations
+models:
+  land_cover:
+    name: "land_cover_classifier"
+    type: "classification"
+    input_bands: ["red", "green", "blue", "nir", "swir1", "swir2"]
+    output_classes: 12
+    pretrained: true
+    weights_path: "./models/land_cover_weights.h5"
+    
+  building_footprint:
+    name: "building_extractor"
+    type: "segmentation"
+    architecture: "unetplusplus"
+    backbone: "efficientnet-b3"
+    input_size: [512, 512, 3]
+    output_channels: 1
+    threshold: 0.5
+    min_building_area: 20  # square meters
+    
+  change_detection:
+    name: "change_detector"
+    type: "binary_classification"
+    architecture: "siamese_unet"
+    temporal_window: 30  # days
+    threshold: 0.6
+
+# Digital Asset Pipeline
+pipeline:
+  # Feature Extraction
+  feature_extraction:
+    enabled_features:
+      - "spectral_indices"
+      - "texture_features"
+      - "geometric_features"
+      - "contextual_features"
+    spectral_indices:
+      - "NDVI"
+      - "NDWI"
+      - "NDBI"
+      - "EVI"
+      - "SAVI"
+    texture_methods:
+      - "glcm"
+      - "lbp"
+    geometric_features:
+      - "area"
+      - "perimeter"
+      - "compactness"
+      - "elongation"
+      
+  # Metadata Generation
+  metadata:
+    standard: "ISO 19115"
+    include_quality_metrics: true
+    include_processing_history: true
+    include_spatial_extent: true
+    auto_generate_keywords: true
+    
+  # Quality Assurance
+  quality_assurance:
+    enabled: true
+    checks:
+      - "geometry_validity"
+      - "attribute_completeness"
+      - "spatial_accuracy"
+      - "temporal_consistency"
+      - "topology_errors"
+    tolerance:
+      positional: 1.0  # meters
+      area: 0.05  # 5%
+    auto_repair: true
+    
+  # Export Settings
+  export:
+    formats:
+      - "geojson"
+      - "shapefile"
+      - "geotiff"
+      - "geopackage"
+      - "kml"
+    compression: true
+    overviews: true
+    pyramids: true
+
+# Processing Workflow
+workflow:
+  # Logging
+  logging:
+    level: "INFO"
+    format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    file: "./logs/pipeline.log"
+    max_size_mb: 100
+    backup_count: 5
+    console_output: true
+    
+  # Progress Tracking
+  progress:
+    enabled: true
+    update_interval: 1.0  # seconds
+    show_eta: true
+    show_memory: true
+    
+  # Error Handling
+  error_handling:
+    strategy: "continue"  # continue, stop, rollback
+    max_retries: 3
+    retry_delay: 5  # seconds
+    save_checkpoint: true
+    checkpoint_interval: 10  # tasks
+    
+  # Parallel Processing
+  parallel:
+    enabled: true
+    n_workers: -1  # -1 for all available CPUs
+    chunk_size: 100
+    use_dask: false
+
+# Sample Data Sources
+data_sources:
+  sentinel2:
+    provider: "copernicus"
+    bands: ["B02", "B03", "B04", "B08", "B11", "B12"]
+    resolution: 10
+    cloud_mask: true
+    
+  landsat8:
+    provider: "usgs"
+    bands: ["B2", "B3", "B4", "B5", "B6", "B7"]
+    resolution: 30
+    cloud_mask: true
+    
+  aerial_imagery:
+    provider: "local"
+    format: "orthophoto"
+    resolution: 0.25
+    
+  osm:
+    provider: "openstreetmap"
+    layers: ["buildings", "roads", "landuse", "water"]
+
+# Visualization Settings
+visualization:
+  colormap:
+    land_cover: "tab20"
+    elevation: "terrain"
+    temperature: "RdYlBu_r"
+    precipitation: "Blues"
+  style:
+    buildings:
+      fill_color: "#FF6B6B"
+      fill_opacity: 0.7
+      stroke_color: "#C92A2A"
+      stroke_width: 1
+    roads:
+      color: "#495057"
+      width: 2
+    water:
+      fill_color: "#339AF0"
+      fill_opacity: 0.8
+    vegetation:
+      fill_color: "#51CF66"
+      fill_opacity: 0.6
+  map_settings:
+    dpi: 300
+    figsize: [12, 10]
+    add_scalebar: true
+    add_north_arrow: true
+    add_legend: true
+
+# API Settings (if deploying as service)
+api:
+  host: "0.0.0.0"
+  port: 8000
+  debug: false
+  cors_origins: ["*"]
+  rate_limit: 100  # requests per minute
+  authentication: false

@@ -1,3 +1,71 @@
+Metadata-Version: 2.4
+Name: geoai-digital-asset-pipeline
+Version: 1.0.0
+Summary: QGIS + AI integration for geospatial analysis and digital asset creation
+Author-email: GeoAI Research Team <geoai@example.com>
+License: MIT
+Project-URL: Homepage, https://github.com/yourusername/GeoAI_Digital_Asset_Pipeline
+Project-URL: Documentation, https://geoai-pipeline.readthedocs.io
+Project-URL: Repository, https://github.com/yourusername/GeoAI_Digital_Asset_Pipeline
+Project-URL: Issues, https://github.com/yourusername/GeoAI_Digital_Asset_Pipeline/issues
+Keywords: gis,qgis,geospatial,machine-learning,deep-learning,remote-sensing,satellite-imagery,geoai
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Science/Research
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Scientific/Engineering :: GIS
+Classifier: Topic :: Scientific/Engineering :: Image Processing
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: numpy>=1.24.0
+Requires-Dist: pandas>=2.0.0
+Requires-Dist: scikit-learn>=1.2.0
+Requires-Dist: geopandas>=0.12.0
+Requires-Dist: rasterio>=1.3.0
+Requires-Dist: shapely>=2.0.0
+Requires-Dist: pyyaml>=6.0
+Requires-Dist: click>=8.1.0
+Requires-Dist: tqdm>=4.65.0
+Requires-Dist: loguru>=0.7.0
+Requires-Dist: psutil>=5.9.0
+Provides-Extra: ml
+Requires-Dist: tensorflow>=2.12.0; extra == "ml"
+Requires-Dist: torch>=2.0.0; extra == "ml"
+Requires-Dist: torchvision>=0.15.0; extra == "ml"
+Requires-Dist: opencv-python>=4.7.0; extra == "ml"
+Provides-Extra: qgis
+Requires-Dist: qgis>=3.28.0; extra == "qgis"
+Requires-Dist: gdal>=3.5.0; extra == "qgis"
+Requires-Dist: pyproj>=3.4.0; extra == "qgis"
+Provides-Extra: dev
+Requires-Dist: pytest>=7.4.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.1.0; extra == "dev"
+Requires-Dist: pytest-mock>=3.11.0; extra == "dev"
+Requires-Dist: black>=23.0.0; extra == "dev"
+Requires-Dist: flake8>=6.1.0; extra == "dev"
+Requires-Dist: mypy>=1.5.0; extra == "dev"
+Requires-Dist: isort>=5.12.0; extra == "dev"
+Provides-Extra: docs
+Requires-Dist: sphinx>=7.0.0; extra == "docs"
+Requires-Dist: sphinx-rtd-theme>=1.3.0; extra == "docs"
+Requires-Dist: mkdocs>=1.5.0; extra == "docs"
+Requires-Dist: mkdocs-material>=9.4.0; extra == "docs"
+Provides-Extra: notebooks
+Requires-Dist: jupyter>=1.0.0; extra == "notebooks"
+Requires-Dist: jupyterlab>=4.0.0; extra == "notebooks"
+Requires-Dist: matplotlib>=3.7.0; extra == "notebooks"
+Requires-Dist: seaborn>=0.12.0; extra == "notebooks"
+Provides-Extra: all
+Requires-Dist: geoai-digital-asset-pipeline[dev,docs,ml,notebooks,qgis]; extra == "all"
+Dynamic: license-file
+
 # GeoAI Digital Asset Pipeline
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)

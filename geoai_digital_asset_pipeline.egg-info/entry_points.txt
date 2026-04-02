@@ -1,0 +1,2 @@
+[console_scripts]
+geoai = scripts.cli:main

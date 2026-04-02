@@ -1,0 +1,102 @@
+# GeoAI Digital Asset Pipeline - Docker Compose
+# ===============================================
+
+version: '3.8'
+
+services:
+  # Main processing service
+  geoai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: geoai-pipeline:latest
+    container_name: geoai-pipeline
+    volumes:
+      - ./data:/app/data
+      - ./outputs:/app/outputs
+      - ./models:/app/models
+      - ./logs:/app/logs
+      - ./config.yaml:/app/config.yaml
+    environment:
+      - PYTHONUNBUFFERED=1
+      - GEOAI_DATA_DIR=/app/data
+      - GEOAI_OUTPUTS_DIR=/app/outputs
+    command: ["python", "-m", "scripts.cli", "info"]
+    networks:
+      - geoai-network
+
+  # Jupyter notebook service
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: geoai-pipeline:latest
+    container_name: geoai-jupyter
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./data:/app/data
+      - ./outputs:/app/outputs
+      - ./models:/app/models
+      - ./notebooks:/app/notebooks
+    environment:
+      - JUPYTER_TOKEN=geoai
+      - PYTHONUNBUFFERED=1
+    command: >
+      jupyter lab --ip=0.0.0.0 --port=8888 --no-browser
+      --allow-root --NotebookApp.token=geoai
+    networks:
+      - geoai-network
+    depends_on:
+      - geoai
+
+  # API service (FastAPI)
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: geoai-pipeline:latest
+    container_name: geoai-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./outputs:/app/outputs
+      - ./models:/app/models
+    environment:
+      - PYTHONUNBUFFERED=1
+      - GEOAI_API_HOST=0.0.0.0
+      - GEOAI_API_PORT=8000
+    command: ["uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    networks:
+      - geoai-network
+    depends_on:
+      - geoai
+
+  # Test runner
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: geoai-pipeline:latest
+    container_name: geoai-test
+    volumes:
+      - ./src:/app/src
+      - ./tests:/app/tests
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: ["pytest", "tests/", "-v", "--cov=src", "--cov-report=term-missing"]
+    networks:
+      - geoai-network
+    profiles:
+      - test
+
+networks:
+  geoai-network:
+    driver: bridge
+
+volumes:
+  data:
+  outputs:
+  models:
+  logs:

@@ -1,0 +1,137 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "geoai-digital-asset-pipeline"
+version = "1.0.0"
+description = "QGIS + AI integration for geospatial analysis and digital asset creation"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "GeoAI Research Team", email = "geoai@example.com"}
+]
+keywords = [
+    "gis",
+    "qgis",
+    "geospatial",
+    "machine-learning",
+    "deep-learning",
+    "remote-sensing",
+    "satellite-imagery",
+    "geoai"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: GIS",
+    "Topic :: Scientific/Engineering :: Image Processing",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+    "scikit-learn>=1.2.0",
+    "geopandas>=0.12.0",
+    "rasterio>=1.3.0",
+    "shapely>=2.0.0",
+    "pyyaml>=6.0",
+    "click>=8.1.0",
+    "tqdm>=4.65.0",
+    "loguru>=0.7.0",
+    "psutil>=5.9.0",
+]
+
+[project.optional-dependencies]
+ml = [
+    "tensorflow>=2.12.0",
+    "torch>=2.0.0",
+    "torchvision>=0.15.0",
+    "opencv-python>=4.7.0",
+]
+qgis = [
+    "qgis>=3.28.0",
+    "gdal>=3.5.0",
+    "pyproj>=3.4.0",
+]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.11.0",
+    "black>=23.0.0",
+    "flake8>=6.1.0",
+    "mypy>=1.5.0",
+    "isort>=5.12.0",
+]
+docs = [
+    "sphinx>=7.0.0",
+    "sphinx-rtd-theme>=1.3.0",
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.4.0",
+]
+notebooks = [
+    "jupyter>=1.0.0",
+    "jupyterlab>=4.0.0",
+    "matplotlib>=3.7.0",
+    "seaborn>=0.12.0",
+]
+all = [
+    "geoai-digital-asset-pipeline[ml,qgis,dev,docs,notebooks]"
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/GeoAI_Digital_Asset_Pipeline"
+Documentation = "https://geoai-pipeline.readthedocs.io"
+Repository = "https://github.com/yourusername/GeoAI_Digital_Asset_Pipeline"
+Issues = "https://github.com/yourusername/GeoAI_Digital_Asset_Pipeline/issues"
+
+[project.scripts]
+geoai = "scripts.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*", "scripts*"]
+
+[tool.setuptools.package-data]
+"*" = ["*.yaml", "*.yml", "*.json"]
+
+[tool.black]
+line-length = 100
+target-version = ['py310', 'py311', 'py312']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | build
+  | dist
+  | docs
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+skip = [".gitignore", ".venv", "build", "dist", "docs"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
